@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marketplace: compra segura x golpe</title>
+<style>
+:root{--ink:#14213d;--muted:#5a6477;--line:#d9dde4;--bg:#eceff3;--bad:#b3261e;--badbg:#fdecea;--ok:#1b6e3c;--okbg:#e6f4ea}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Segoe UI",system-ui,Arial,sans-serif;padding-bottom:230px}
+.top{background:var(--ink);color:#fff;padding:14px 20px;display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;justify-content:space-between}
+.top h1{margin:0;font-size:18px;font-weight:600}.top p{margin:0;font-size:13px;opacity:.8}
+.ctrl{display:flex;gap:10px;flex-wrap:wrap}
+.ctrl button{font:inherit;font-size:13px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;padding:6px 12px;border-radius:4px;cursor:pointer}
+.ctrl button:hover{background:rgba(255,255,255,.12)}.ctrl button.on{background:#fff;color:var(--ink)}
+.steps{display:flex;gap:0;max-width:1320px;margin:14px auto 0;padding:0 16px}
+.steps button{flex:1;font:inherit;font-size:14px;padding:10px 12px;border:1px solid var(--line);background:#f7f8fa;color:var(--muted);cursor:pointer;text-align:left}
+.steps button+button{border-left:0}
+.steps button.on{background:#fff;color:var(--ink);font-weight:600;border-bottom-color:#fff;box-shadow:inset 0 3px 0 var(--ink)}
+.steps b{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;color:var(--muted)}
+.wrap{max-width:1320px;margin:0 auto;padding:16px}
+.frames{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:980px){.frames{grid-template-columns:1fr}}
+.lab{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:0 0 6px}
+.lab.a{color:var(--ok)}.lab.b{color:var(--bad)}
+.browser{background:#fff;border:1px solid #b9bfca;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.chrome{background:#dfe3ea;padding:8px 10px;display:flex;gap:10px;align-items:center;border-bottom:1px solid #b9bfca}
+.dots{display:flex;gap:5px}.dots i{width:9px;height:9px;border-radius:50%;background:#b0b6c1;display:block}
+.url{flex:1;background:#fff;border-radius:14px;padding:4px 12px;font-size:12.5px;display:flex;gap:6px;align-items:center;overflow:hidden;white-space:nowrap}
+.url span{overflow:hidden;text-overflow:ellipsis}
+.site{font:12.5px/1.4 Arial,Helvetica,sans-serif;color:#222;background:#f3f3f3;min-height:470px}
+.v-head{background:#0e7c66;color:#fff;display:flex;gap:14px;align-items:center;padding:10px 14px}
+.v-logo{font-weight:800;font-size:20px;letter-spacing:-.03em}
+.v-search{flex:1;background:#fff;color:#888;padding:7px 10px;border-radius:3px;min-width:80px}
+.v-nav{background:#0b6553;color:#cfeee6;padding:5px 14px;font-size:11.5px;display:flex;gap:14px;white-space:nowrap;overflow:hidden}
+.box{background:#fff;border:1px solid #e3e3e3;border-radius:4px;padding:12px 14px;margin:10px 12px 0}
+.row{display:grid;grid-template-columns:130px 1fr;gap:14px}
+.img{background:#eef0f3;border-radius:4px;display:flex;align-items:center;justify-content:center;aspect-ratio:1}
+h2{font-size:16px;margin:0 0 4px;font-weight:600}
+.sub{color:#777;font-size:11.5px}
+.old{color:#888;text-decoration:line-through;font-size:12px;margin-top:6px}
+.price{font-size:26px;font-weight:700;line-height:1.1}
+.off{color:#0e7c66;font-size:13px;font-weight:700}
+.btn{display:inline-block;background:#ff6a00;color:#fff;font-weight:700;padding:9px 20px;border-radius:4px;margin:8px 8px 0 0;font-size:13px}
+.btn.g{background:#e6f4f0;color:#0e7c66}
+.sel{margin:10px 12px 0;background:#fff;border:1px solid #e3e3e3;border-radius:4px;padding:10px 14px;display:flex;gap:12px;align-items:center}
+.av{width:40px;height:40px;border-radius:50%;background:#cbd3dc;flex:none;display:flex;align-items:center;justify-content:center;font-weight:700;color:#556}
+.badge{display:inline-block;background:#0e7c66;color:#fff;font-size:10.5px;font-weight:700;padding:2px 6px;border-radius:3px;margin-left:4px}
+.warn{color:#c0392b}
+.prot{margin:10px 12px 0;background:#e6f4f0;border:1px solid #bfe3d8;color:#0b5a49;border-radius:4px;padding:8px 12px}
+.chat{margin:10px 12px 0;background:#e9e4da;border-radius:4px;padding:10px;display:grid;gap:7px}
+.chat .m{max-width:82%;padding:7px 10px;border-radius:7px;background:#fff;box-shadow:0 1px 1px rgba(0,0,0,.1)}
+.chat .me{justify-self:end;background:#d9fdd3}
+.chat small{display:block;color:#999;font-size:10px;margin-top:2px}
+.sum{display:grid;gap:4px}.sum div{display:flex;justify-content:space-between}
+.sum .t{font-weight:700;font-size:14px;border-top:1px solid #eee;padding-top:5px;margin-top:3px}
+.opt{display:flex;gap:8px;align-items:center;padding:6px 0;border-bottom:1px solid #f0f0f0}
+.opt i{width:12px;height:12px;border:2px solid #999;border-radius:50%;display:inline-block}
+.opt i.s{border-color:#0e7c66;background:radial-gradient(#0e7c66 45%,transparent 50%)}
+.qr{width:96px;height:96px;background:repeating-conic-gradient(#111 0 25%,#fff 0 50%) 0 0/16px 16px;border:6px solid #fff;outline:1px solid #ccc}
+.track{display:grid;gap:8px}.track div{display:flex;gap:8px;align-items:center}
+.track i{width:10px;height:10px;border-radius:50%;background:#0e7c66;flex:none}.track i.p{background:#cbd3dc}
+[data-h]{cursor:pointer;border-radius:3px}
+.hint [data-h]{outline:2px dashed rgba(181,72,27,.75);outline-offset:2px}
+[data-h]:hover{outline:2px solid #b5481b;outline-offset:2px}
+[data-h].found.bad{outline:2px solid var(--bad);outline-offset:2px}
+[data-h].found.ok{outline:2px solid var(--ok);outline-offset:2px}
+.lesson{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:980px){.lesson{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:16px 18px}
+.card h3{margin:0 0 8px;font-size:15px}
+#tip{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(860px,94vw);z-index:20;box-shadow:0 6px 24px rgba(20,33,61,.28);border-color:#9aa3b5;padding-right:44px}
+#tip.hide{display:none}
+#tip .x{position:absolute;right:10px;top:8px;border:0;background:none;font-size:22px;line-height:1;color:var(--muted);cursor:pointer}
+#tip .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;margin-bottom:8px}
+#tip .tag.bad{background:var(--badbg);color:var(--bad)}#tip .tag.ok{background:var(--okbg);color:var(--ok)}
+#tip h4{margin:0 0 6px;font-size:17px}#tip p{margin:0 0 8px}
+#tip .how{background:#f4f6f9;border-left:3px solid var(--ink);padding:8px 10px;font-size:14px}
+.prog{height:8px;background:#e3e6ec;border-radius:4px;overflow:hidden;margin:6px 0 10px}
+.prog i{display:block;height:100%;width:0;background:var(--bad);transition:width .3s}
+ul.list{list-style:none;padding:0;margin:0;display:grid;gap:6px}
+ul.list li{display:flex;gap:8px;font-size:14px;color:#8a92a3}
+ul.list li:before{content:"";flex:none;width:14px;height:14px;margin-top:3px;border:2px solid #c3c8d2;border-radius:3px}
+ul.list li.done{color:var(--ink)}ul.list li.done:before{background:var(--bad);border-color:var(--bad)}
+.check{margin-top:14px;font-size:14px}.check ol{margin:6px 0 0;padding-left:20px}
+.foot{font-size:12px;color:var(--muted);text-align:center;padding:14px}
+</style>
+</head>
+<body>
+<div class="top">
+  <div><h1>Marketplace: compra segura x golpe</h1><p>Mesma plataforma, dois vendedores. Siga a compra passo a passo e clique para descobrir onde o golpe aparece.</p></div>
+  <div class="ctrl"><button id="bHint">Mostrar pistas</button><button id="bReveal">Revelar sinais desta etapa</button><button id="bReset">Recomeçar</button></div>
+</div>
+<div class="steps" id="steps"></div>
+<div class="wrap">
+  <div class="frames">
+    <div><p class="lab a">Vendedor A · compra dentro da plataforma</p><div class="browser" id="A"></div></div>
+    <div><p class="lab b">Vendedor B · anúncio golpista</p><div class="browser" id="B"></div></div>
+  </div>
+  <div class="lesson">
+    <div class="card" id="intro" style="color:#5a6477;display:flex;align-items:center"></div>
+    <div class="card">
+      <h3>Sinais de golpe encontrados: <span id="n">0</span> de <span id="tot">0</span></h3>
+      <div class="prog"><i id="bar"></i></div>
+      <ul class="list" id="list"></ul>
+      <div class="check"><b>Regra de ouro:</b>
+        <ol>
+          <li>Converse e pague sempre dentro da plataforma. É isso que permite recuperar o dinheiro.</li>
+          <li>Desconfie de quem pede para sair do site, do chat ou do anúncio.</li>
+          <li>Veja a reputação do vendedor: tempo de conta, vendas e avaliações.</li>
+          <li>Preço muito abaixo do mercado é isca.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <div id="tip" class="card hide"></div>
+  <p class="foot">Simulação educativa. "Vendaí", nomes, telefones, endereços e valores são fictícios; nenhum campo envia dados. Padrões baseados em investigação da ESET sobre golpes em marketplaces e em alertas da imprensa (ver arquivo de fontes).</p>
+</div>
+<script>
+const lap='<svg viewBox="0 0 120 90" width="110" height="82"><rect x="20" y="10" width="80" height="55" rx="4" fill="#2b2f36"/><rect x="25" y="15" width="70" height="45" rx="2" fill="#4a90c2"/><path d="M8 70h104l-8 12H16z" fill="#9aa1ad"/></svg>';
+const U={
+ A:['vendai.com.br/anuncio/notebook-15-6-i5','vendai.com.br/checkout','vendai.com.br/pedido/acompanhar'],
+ B:['vendai.com.br/anuncio/notebook-15-6-i5-promo','vendai.com.br/mensagens','vendai-pagamento-seguro.top/pg']};
+const head='<div class="v-head"><div class="v-logo">Vendaí</div><div class="v-search">Buscar no Vendaí</div><div>Entrar</div></div><div class="v-nav"><span>Categorias</span><span>Ofertas</span><span>Vender</span><span>Ajuda</span></div>';
+const STEP=[
+{name:'Anúncio',
+ A:`${head}<div class="box"><div class="row"><div class="img">${lap}</div><div><h2>Notebook 15,6" Intel Core i5, 8 GB, SSD 256 GB</h2><div class="sub">Novo · 213 vendidos</div><div class="old">R$ 3.899,00</div><div class="price" data-h="preco">R$ 3.399,00</div><div class="off">12% OFF · 10x R$ 339,90 sem juros</div><span class="btn">Comprar agora</span><span class="btn g">Adicionar ao carrinho</span></div></div></div>
+ <div class="sel" data-h="vendedor"><div class="av">LT</div><div><b>Loja Tech Sul</b> <span class="badge">Vendedor Destaque</span><br><span class="sub">4,8 de 5 · +12 mil vendas · na plataforma há 6 anos</span></div></div>
+ <div class="prot" data-h="protecao"><b>Compra Protegida:</b> receba o produto ou devolvemos seu dinheiro.</div>`,
+ B:`${head}<div class="box"><div class="row"><div class="img">${lap}</div><div><h2>Notebook 15,6" Intel Core i5, 8 GB, SSD 256 GB</h2><div class="sub">Novo · 0 vendidos</div><div class="old">R$ 3.899,00</div><div class="price" data-h="preco">R$ 1.199,00</div><div class="off">69% OFF · <span class="warn" data-h="pressa">Restam 2 unidades</span></div><span class="btn" style="background:#bbb">Comprar agora indisponível</span><span class="btn g" data-h="whats">Falar com o vendedor</span></div></div></div>
+ <div class="sel" data-h="vendedor"><div class="av">?</div><div><b>Tech.Promo.Oficial</b><br><span class="sub warn">Conta criada há 3 dias · sem avaliações · 0 vendas</span></div></div>
+ <div class="box" data-h="foraplat" style="margin-top:10px"><b>Atenção:</b> pagamento apenas via Pix. Chame no WhatsApp para fechar com desconto.</div>`},
+{name:'Conversa e pagamento',
+ A:`${head}<div class="box"><b>Resumo da compra</b><div class="sum" style="margin-top:6px"><div><span>Notebook 15,6"</span><span>R$ 3.399,00</span></div><div data-h="frete"><span>Frete (calculado pelo CEP)</span><span>R$ 29,90</span></div><div class="t"><span>Total</span><span>R$ 3.428,90</span></div></div></div>
+ <div class="box"><b>Pagamento</b><div class="opt"><i class="s"></i> Cartão de crédito em até 10x</div><div class="opt"><i></i> Pix</div><div class="opt"><i></i> Boleto</div><span class="btn">Confirmar compra</span></div>
+ <div class="prot" data-h="protecao">O pagamento fica retido no Vendaí e só é liberado ao vendedor depois que você receber.</div>`,
+ B:`${head}<div class="box" style="padding:8px 14px"><b>Mensagens · Tech.Promo.Oficial</b></div>
+ <div class="chat"><div class="m">Oi! Está disponível sim. Para não pagar a taxa do site, fechamos por fora.<small>14:02</small></div>
+ <div class="m" data-h="foraplat">Me chama no WhatsApp (79) 90000-0000 que passo a chave Pix.<small>14:02</small></div>
+ <div class="m me">E o frete?<small>14:04</small></div>
+ <div class="m" data-h="frete">Frete é R$ 89,00, paga em Pix separado, direto pra mim.<small>14:05</small></div>
+ <div class="m" data-h="link">Já te mando o link do pagamento seguro: vendai-pagamento-seguro.top/pg<small>14:05</small></div>
+ <div class="m" data-h="pressa">Corre que tem outra pessoa querendo. Só seguro até 15h.<small>14:06</small></div></div>`},
+{name:'Pagamento e depois',
+ A:`${head}<div class="box"><b>Pedido #4821907 · Pagamento aprovado</b><div class="track" style="margin-top:8px"><div><i></i> Pedido confirmado</div><div><i></i> Preparando envio</div><div><i class="p"></i> Em transporte, com código de rastreio</div><div><i class="p"></i> Entregue</div></div></div>
+ <div class="prot" data-h="protecao"><b>Seu dinheiro está retido.</b> Só será repassado ao vendedor depois da entrega. Se algo der errado, abra uma reclamação aqui mesmo.</div>
+ <div class="box" data-h="url"><span class="sub">Você está em vendai.com.br, o endereço que você digitou.</span></div>`,
+ B:`<div style="background:#0e7c66;color:#fff;padding:10px 14px;font-weight:800;font-size:18px">Vendaí <span style="font-weight:400;font-size:12px">Pagamento seguro</span></div>
+ <div class="box"><b>Finalize seu pagamento</b><br><span class="sub">Notebook 15,6" · Total R$ 1.288,00 (produto + frete)</span><div style="display:flex;gap:14px;margin-top:10px;align-items:center"><div class="qr"></div><div data-h="pessoa"><b>Pix para: Anderson P. S.</b><br><span class="sub">CPF ***.482.917-**<br>Conta de pessoa física</span></div></div><span class="btn" style="margin-top:12px">Já paguei</span></div>
+ <div class="box" data-h="semprot"><span class="sub">Após o pagamento, o vendedor entra em contato. <span class="warn">Sem código de rastreio. Sem retenção. Sem como reclamar na plataforma.</span></span></div>`}
+];
+const TIPS={
+ vendedor:{A:['ok','Vendedor com histórico','Seis anos na plataforma, mais de 12 mil vendas e nota 4,8. Reputação construída com o tempo é difícil de falsificar.','Clique no perfil do vendedor e leia avaliações recentes, inclusive as ruins.'],
+           B:['bad','Perfil recém-criado','Conta de 3 dias, zero vendas, nenhuma avaliação. Golpistas abrem contas novas toda hora, e quando são denunciados, trocam de perfil. A ESET cita "vendedor sem avaliações" como sinal de alerta.','Desconfie de vendedor sem histórico, ainda mais com produto caro.']},
+ preco:{A:['ok','Preço de mercado','Desconto moderado, próximo ao de outras lojas.','Compare com 2 ou 3 lojas antes de comprar.'],
+        B:['bad','Preço muito abaixo do mercado','69% de desconto em notebook novo. A ESET aponta o preço muito baixo como a isca mais usada em golpes de marketplace.','Pesquise o mesmo modelo em outras lojas. Se o preço é a metade, desconfie.']},
+ protecao:{A:['ok','Compra Protegida','O pagamento fica retido na plataforma até a entrega. É o que permite pedir o dinheiro de volta.','Só vale se você pagar dentro da plataforma.'],B:['bad','','','']},
+ pressa:{A:['ok','','',''],B:['bad','Pressa e escassez','"Restam 2 unidades" e "só seguro até 15h". A pressa tira o tempo de pesquisar e de desconfiar.','Pare. Oferta de verdade espera 5 minutos.']},
+ whats:{A:['ok','','',''],B:['bad','Convite para sair da plataforma','Todas as proteções ficam dentro da plataforma. Sair do chat é abrir mão delas.','Se o vendedor insiste em outro canal, denuncie o anúncio.']},
+ foraplat:{A:['ok','','',''],B:['bad','Negociar e pagar por fora','"Pagamento apenas via Pix, chame no WhatsApp." Sem pagamento pela plataforma, não há retenção do dinheiro nem como abrir reclamação.','Regra de ouro: negocie e pague só dentro da plataforma. Decisões judiciais têm negado indenização a quem paga fora (Conjur).']},
+ frete:{A:['ok','Frete calculado na plataforma','O frete aparece no total, pelo CEP, dentro da compra protegida.',''],
+        B:['bad','"Frete" por Pix separado','Golpe descrito pela ESET: depois da compra, o falso vendedor pede um frete caro fora da plataforma. Esse valor não fica registrado na compra, então não há o que estornar.','Frete legítimo sempre entra no total do pedido.']},
+ link:{A:['ok','','',''],B:['bad','Link de "pagamento seguro"','O endereço vendai-pagamento-seguro.top não é o do Vendaí. Só o texto "pagamento seguro" no nome tenta passar confiança.','Confira o domínio inteiro. Se não é vendai.com.br, não pague. Você digita o endereço; não clica.']},
+ url:{A:['ok','Endereço digitado por você','Você continua em vendai.com.br. Compare sempre com a barra de endereço.',''],B:['bad','','','']},
+ pessoa:{A:['ok','','',''],B:['bad','Pix para pessoa física','Uma loja de verdade recebe em nome de empresa (CNPJ). Aqui o dinheiro vai para a conta de um CPF.','Antes de pagar, veja o nome do recebedor. Se não bate com o vendedor, cancele.']},
+ semprot:{A:['ok','','',''],B:['bad','Sem rastreio e sem proteção','Depois do Pix, o golpista some. Não há pedido, código de rastreio, nem retenção do pagamento.','Se pagou, procure o banco imediatamente (pedido de devolução por Pix) e registre boletim de ocorrência.']}
+};
+const SIGNS=[['vendedor','Vendedor novo e sem avaliações'],['preco','Preço muito abaixo do mercado'],['foraplat','Pedido para negociar e pagar por fora'],['frete','"Frete" cobrado em Pix separado'],['pressa','Pressa para fechar'],['link','Link com endereço diferente'],['pessoa','Pix para pessoa física']];
+let step=0;const found=new Set();const tip=document.getElementById('tip');
+function frame(k,s){return `<div class="chrome"><div class="dots"><i></i><i></i><i></i></div><div class="url"><span>${U[k][s]}</span></div></div><div class="site">${STEP[s][k]}</div>`}
+function render(){document.getElementById('A').innerHTML=frame('A',step);document.getElementById('B').innerHTML=frame('B',step);
+ document.querySelectorAll('#A [data-h]').forEach(e=>e.dataset.s='A');document.querySelectorAll('#B [data-h]').forEach(e=>e.dataset.s='B');
+ document.querySelectorAll('[data-h]').forEach(e=>{if(found.has(e.dataset.s+e.dataset.h)){const t=TIPS[e.dataset.h][e.dataset.s];e.classList.add('found',t[0])}});
+ document.getElementById('steps').innerHTML=STEP.map((s,i)=>`<button class="${i===step?'on':''}" onclick="go(${i})"><b>Etapa ${i+1}</b>${s.name}</button>`).join('');
+ const intro=['O anúncio já está dentro do Vendaí. Compare quem vende, o preço e o que o site oferece de proteção.','Agora vem a conversa e o pagamento. À esquerda, tudo dentro da plataforma. À direita, o vendedor tenta tirar você dela.','Último passo: o pagamento. Veja para onde vai o dinheiro e o que acontece depois.'];
+ document.getElementById('intro').textContent=intro[step];upd()}
+function go(i){step=i;emptyTip();render()}
+function emptyTip(){tip.className='card hide';tip.innerHTML=''}
+function show(id,side){const t=TIPS[id]&&TIPS[id][side];if(!t||!t[1])return;
+ tip.className='card';tip.innerHTML=`<button class="x" onclick="emptyTip()" aria-label="Fechar">×</button><span class="tag ${t[0]}">${t[0]==='bad'?'Sinal de golpe · Vendedor '+side:'Confere · Vendedor '+side}</span><h4>${t[1]}</h4><p>${t[2]}</p>${t[3]?`<div class="how"><b>Como confirmar:</b> ${t[3]}</div>`:''}`;
+ if(t[0]==='bad')found.add(id);found.add(side+id);
+ document.querySelectorAll(`[data-h="${id}"][data-s="${side}"]`).forEach(e=>e.classList.add('found',t[0]));upd()}
+function upd(){const n=SIGNS.filter(s=>found.has(s[0])).length;document.getElementById('n').textContent=n;document.getElementById('tot').textContent=SIGNS.length;
+ document.getElementById('bar').style.width=(n/SIGNS.length*100)+'%';
+ document.getElementById('list').innerHTML=SIGNS.map(s=>`<li class="${found.has(s[0])?'done':''}">${s[1]}</li>`).join('')}
+document.addEventListener('click',e=>{const h=e.target.closest('[data-h]');if(h)show(h.dataset.h,h.dataset.s)});
+document.getElementById('bHint').onclick=function(){document.body.classList.toggle('hint');this.classList.toggle('on')};
+document.getElementById('bReveal').onclick=()=>{document.querySelectorAll('[data-h]').forEach(e=>{const t=TIPS[e.dataset.h][e.dataset.s];if(t[1]){found.add(e.dataset.s+e.dataset.h);if(t[0]==='bad')found.add(e.dataset.h);e.classList.add('found',t[0])}});upd()};
+document.getElementById('bReset').onclick=()=>{found.clear();step=0;emptyTip();render()};
+render();
+</script>
+</body>
+</html>

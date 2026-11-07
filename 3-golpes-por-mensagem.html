@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Golpes por mensagem, e-mail e ligação</title>
+<style>
+:root{--ink:#14213d;--muted:#5a6477;--line:#d9dde4;--bg:#eceff3;--bad:#b3261e;--badbg:#fdecea;--ok:#1b6e3c;--okbg:#e6f4ea}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Segoe UI",system-ui,Arial,sans-serif;padding-bottom:210px}
+.top{background:var(--ink);color:#fff;padding:14px 20px;display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;justify-content:space-between}
+.top h1{margin:0;font-size:18px;font-weight:600}.top p{margin:0;font-size:13px;opacity:.8}
+.top button{font:inherit;font-size:13px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;padding:6px 12px;border-radius:4px;cursor:pointer}
+.top button:hover{background:rgba(255,255,255,.12)}.top button.on{background:#fff;color:var(--ink)}
+.tabs{display:flex;max-width:1100px;margin:14px auto 0;padding:0 16px}
+.tabs button{flex:1;font:inherit;font-size:14px;padding:10px 12px;border:1px solid var(--line);background:#f7f8fa;color:var(--muted);cursor:pointer;text-align:left}
+.tabs button+button{border-left:0}.tabs button.on{background:#fff;color:var(--ink);font-weight:600;box-shadow:inset 0 3px 0 var(--ink)}
+.tabs b{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.main{max-width:1100px;margin:0 auto;padding:16px;display:grid;grid-template-columns:360px 1fr;gap:22px;align-items:start}
+@media(max-width:860px){.main{grid-template-columns:1fr}.tabs{flex-wrap:wrap}.tabs button{flex:1 1 45%}}
+.phone{width:340px;margin:0 auto;border:10px solid #1b1f27;border-radius:38px;background:#fff;overflow:hidden;box-shadow:0 8px 24px rgba(0,0,0,.25);height:620px;display:flex;flex-direction:column}
+.status{background:#111;color:#fff;font-size:11px;display:flex;justify-content:space-between;padding:5px 16px}
+.screen{flex:1;overflow:auto;font:13px/1.4 Arial,Helvetica,sans-serif;color:#222}
+.opts{width:340px;margin:14px auto 0;display:grid;gap:8px}
+.opts p{margin:0 0 2px;font-weight:700;font-size:13px;letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+.opts button{font:inherit;font-size:14px;text-align:left;padding:10px 12px;border:1px solid #9aa3b5;background:#fff;border-radius:6px;cursor:pointer}
+.opts button:hover{background:#f1f4f8;border-color:var(--ink)}
+.card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:16px 18px;margin-bottom:14px}
+.card h3{margin:0 0 8px;font-size:15px}.card p{margin:0 0 8px}
+.src{font-size:12.5px;color:var(--muted)}
+.prog{height:8px;background:#e3e6ec;border-radius:4px;overflow:hidden;margin:6px 0 10px}
+.prog i{display:block;height:100%;width:0;background:var(--bad);transition:width .3s}
+ul.list{list-style:none;padding:0;margin:0;display:grid;gap:6px}
+ul.list li{display:flex;gap:8px;font-size:14px;color:#8a92a3}
+ul.list li:before{content:"";flex:none;width:14px;height:14px;margin-top:3px;border:2px solid #c3c8d2;border-radius:3px}
+ul.list li.done{color:var(--ink)}ul.list li.done:before{background:var(--bad);border-color:var(--bad)}
+.res{border-left:5px solid;padding:14px 16px;border-radius:6px}
+.res.bad{background:var(--badbg);border-color:var(--bad)}.res.good{background:var(--okbg);border-color:var(--ok)}
+.res h4{margin:0 0 6px;font-size:17px}.res p{margin:0 0 8px}
+.res button{font:inherit;font-size:14px;border:1px solid var(--ink);background:#fff;border-radius:5px;padding:6px 14px;cursor:pointer;margin-top:4px}
+[data-h]{cursor:pointer;border-radius:3px}
+.hint [data-h]{outline:2px dashed rgba(181,72,27,.8);outline-offset:1px}
+[data-h]:hover{outline:2px solid #b5481b;outline-offset:1px}
+[data-h].found{outline:2px solid var(--bad);outline-offset:1px}
+#tip{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(860px,94vw);z-index:20;box-shadow:0 6px 24px rgba(20,33,61,.28);border-color:#9aa3b5;padding-right:44px;margin:0}
+#tip.hide{display:none}
+#tip .x{position:absolute;right:10px;top:8px;border:0;background:none;font-size:22px;color:var(--muted);cursor:pointer;line-height:1}
+#tip .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;margin-bottom:8px;background:var(--badbg);color:var(--bad)}
+#tip h4{margin:0 0 6px;font-size:17px}
+#tip .how{background:#f4f6f9;border-left:3px solid var(--ink);padding:8px 10px;font-size:14px}
+.foot{font-size:12px;color:var(--muted);text-align:center;padding:6px 16px 14px;max-width:1100px;margin:0 auto}
+/* telas */
+.sms{background:#f2f2f6;height:100%}
+.sms .hd{background:#f9f9fb;border-bottom:1px solid #ddd;text-align:center;padding:10px 6px}
+.sms .hd small{display:block;color:#888}
+.sms .b{background:#e5e5ea;border-radius:16px;padding:9px 12px;margin:14px 10px 4px;max-width:88%}
+.sms .t{color:#999;font-size:11px;margin:0 14px}
+.wa{background:#e9e1d6;height:100%}
+.wa .hd{background:#0f6b5c;color:#fff;padding:9px 12px;display:flex;gap:10px;align-items:center}
+.av{width:34px;height:34px;border-radius:50%;background:#aab4bd;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;flex:none}
+.wa .m{background:#fff;border-radius:8px;padding:7px 10px;margin:8px 10px;max-width:86%;box-shadow:0 1px 1px rgba(0,0,0,.12)}
+.wa .m small{display:block;color:#999;font-size:10px;text-align:right}
+.mail .hd{padding:10px 12px;border-bottom:1px solid #e5e5e5}
+.mail .hd b{font-size:14px}.mail .hd div{color:#666;font-size:12px}
+.mail .bd{padding:12px}
+.mail .lk{display:inline-block;background:#0b57d0;color:#fff;padding:9px 16px;border-radius:4px;margin:10px 0;font-weight:700}
+.web .u{background:#e3e6eb;padding:7px 10px;font-size:11.5px;display:flex;gap:6px}
+.web .u span{background:#fff;border-radius:10px;padding:2px 10px;flex:1}
+.web .p{padding:12px}
+.web input{width:100%;border:1px solid #ccc;border-radius:3px;padding:7px 8px;margin:3px 0 8px;font:inherit}
+.web .go{background:#ff6a00;color:#fff;text-align:center;padding:9px;border-radius:4px;font-weight:700}
+.qr{width:90px;height:90px;background:repeating-conic-gradient(#111 0 25%,#fff 0 50%) 0 0/15px 15px;border:6px solid #fff;outline:1px solid #ccc}
+.call{background:#14181f;color:#e8ecf2;height:100%;padding:14px}
+.call .who{text-align:center;padding:10px 0 12px;border-bottom:1px solid #2a303b;margin-bottom:12px}
+.call .who b{display:block;font-size:17px}.call .who small{color:#8a93a3}
+.call .l{margin:8px 0;padding:8px 10px;border-radius:8px;background:#222833}
+.call .l small{display:block;color:#8a93a3;font-size:10.5px;text-transform:uppercase;letter-spacing:.05em}
+.call .l.me{background:#1d3a2e}
+</style>
+</head>
+<body>
+<div class="top">
+  <div><h1>Golpes por mensagem, e-mail e ligação</h1><p>Você é a vítima da vez. Leia, clique nos sinais suspeitos e escolha o que fazer.</p></div>
+  <div><button id="bHint">Mostrar pistas</button> <button id="bReset">Recomeçar</button></div>
+</div>
+<div class="tabs" id="tabs"></div>
+<div class="main">
+  <div><div class="phone"><div class="status"><span>21:47</span><span>4G ▮▮▮</span></div><div class="screen" id="screen"></div></div><div class="opts" id="opts"></div></div>
+  <div>
+    <div class="card" id="intro"></div>
+    <div class="card"><h3>Sinais de golpe encontrados: <span id="n">0</span> de <span id="tot">0</span></h3><div class="prog"><i id="bar"></i></div><ul class="list" id="list"></ul></div>
+    <div id="result"></div>
+  </div>
+</div>
+<div id="tip" class="card hide"></div>
+<p class="foot">Simulação educativa. Marcas, números, valores e nomes são fictícios; nada é enviado. Padrões baseados em alertas da imprensa, da Febraban, da ESET e do Procon-MG (ver arquivo de fontes).</p>
+<script>
+const SC=[
+{id:'sms',tab:'SMS',name:'Falsa taxa de entrega',
+ intro:'<b>O que é:</b> mensagem dizendo que a encomenda está "retida" e que é preciso pagar uma pequena taxa para liberar. O link leva a uma página que imita uma transportadora. É um dos golpes mais repetidos, com alertas desde 2024.<div class="src">Fontes: Canaltech, Tribuna de Minas, Santander, WeLiveSecurity.</div>',
+ signs:[['rem','Número comum de celular'],['urg','Prazo curto para pagar'],['taxa','Taxa pequena como isca'],['link','Endereço do link estranho'],['pes','Pix para pessoa física']],
+ steps:[
+  {screen:`<div class="sms"><div class="hd"><b data-h="rem">+55 79 99999-0000</b><small>Mensagem de texto</small></div><div class="b">ENTREGA JÁ: seu pedido <b>BR48291736</b> está <b>RETIDO</b>. Pague a <span data-h="taxa">taxa de liberação de R$ 12,90</span> <span data-h="urg">em até 2h</span> ou será devolvido: <span data-h="link" style="color:#0b57d0;text-decoration:underline">entregaja-liberacao.top/pg</span></div><div class="t">Hoje 21:47</div></div>`,
+   choices:[['Tocar no link e pagar a taxa',1],['Ignorar e conferir o rastreio no site ou app da loja onde comprei',['good','Boa decisão','Quem espera encomenda confere o rastreio digitando o endereço da transportadora ou no app da loja. Alertas sobre esse golpe afirmam que cobrança de taxa por SMS ou WhatsApp é falsa. Marque a mensagem como spam e apague.']]]},
+  {screen:`<div class="web"><div class="u">Fechar<span data-h="link">entregaja-liberacao.top/pg</span></div><div class="p"><b style="font-size:16px;color:#0e5f9a">Entrega Já</b><br><span style="color:#666">Liberação de encomenda BR48291736</span><div style="margin:10px 0;padding:8px;background:#fff6e5;border:1px solid #f0d9a8"><b>Valor a pagar: R$ 12,90</b><br><span data-h="urg" style="color:#c0392b">Tempo restante: 01:58:12</span></div><div style="display:flex;gap:12px;align-items:center"><div class="qr"></div><div data-h="pes"><b>Pix para: Marcos V. L.</b><br><span style="color:#666">conta de pessoa física</span></div></div><div class="go" style="margin-top:12px">Já paguei</div></div></div>`,
+   choices:[['Pagar o Pix de R$ 12,90',['bad','Caiu no golpe','O valor pequeno serve para baixar a guarda, e quem recebe é uma pessoa, não a transportadora. Não existe taxa de liberação cobrada por link. Se isso aconteceu: avise o banco na hora para tentar devolução do Pix e registre boletim de ocorrência.']],['Fechar a página sem digitar nada',['good','Boa decisão','Você percebeu: endereço estranho (.top), prazo curto e Pix para pessoa física. Para conferir a encomenda, use o código de rastreio no site oficial digitado por você.']]]}]},
+{id:'zap',tab:'WhatsApp',name:'Falso parente com número novo',
+ intro:'<b>O que é:</b> o golpista se passa por filho, mãe ou amigo, diz que trocou de número e pede um Pix urgente. A Febraban apontou o golpe do WhatsApp como o mais reclamado em 2024, com 153 mil queixas.<div class="src">Fontes: Febraban (dados de 2024, via Fast Company Brasil), Consumidor Moderno.</div>',
+ signs:[['num','Número desconhecido, sem histórico'],['pix','Pedido de Pix a um "conhecido"'],['urg','Urgência e conta que vence hoje'],['ban','Desculpa para não ligar nem falar']],
+ steps:[{screen:`<div class="wa"><div class="hd"><div class="av">?</div><div data-h="num"><b>+55 79 98888-0000</b><br><small style="opacity:.85">Não está nos seus contatos</small></div></div><div class="m">Oi mãe! Esse é meu número novo, perdi meu celular ontem. Salva aí<small>20:12</small></div><div class="m">Mãe preciso muito de um favor. Meu app do banco <span data-h="ban">bloqueou no chip novo e não consigo ligar agora</span><small>20:13</small></div><div class="m"><span data-h="pix">Consegue fazer um Pix de R$ 1.850 pra mim?</span> <span data-h="urg">É um boleto que vence hoje</span>, te devolvo amanhã<small>20:13</small></div></div>`,
+  choices:[['Fazer o Pix e depois ligar para confirmar',['bad','Caiu no golpe','Pix cai na hora e é difícil de reverter. Só ligue depois, e já é tarde. Se aconteceu: avise o banco imediatamente, use a opção de devolução do Pix e registre boletim de ocorrência.']],['Ligar para o número antigo do meu filho',['good','Boa decisão','Ligar para o número que você já tinha (ou para outro parente) resolve na hora. Golpista não atende como a pessoa real, e por isso inventa que não pode falar.']],['Fazer uma pergunta que só ele saberia',['good','Bom começo, mas ligue também','Uma pergunta pessoal ajuda, mas o golpista pode ter pistas pelas redes sociais. O mais seguro é ligar para o número antigo. E ative a verificação em duas etapas no WhatsApp.']]]}]},
+{id:'mail',tab:'E-mail',name:'Falso aviso de conta suspensa',
+ intro:'<b>O que é:</b> e-mail que imita uma loja ou marketplace dizendo que sua conta será bloqueada. O botão leva a uma página falsa que rouba senha e cartão. É o <i>phishing</i> descrito pela ESET nos golpes contra usuários de marketplaces.<div class="src">Fontes: ESET (golpes no Mercado Livre e Mercado Pago, 2023); Procon-MG.</div>',
+ signs:[['rem','Remetente com domínio estranho'],['sau','Saudação genérica ("Prezado cliente")'],['urg','Ameaça e prazo de 24 horas'],['link','Botão leva a outro endereço'],['dados','Pede dados demais']],
+ steps:[
+  {screen:`<div class="mail"><div class="hd"><b>URGENTE: sua conta será bloqueada em 24h</b><div>De: Segurança Vendaí &lt;<span data-h="rem">suporte@vendai-seguranca.top</span>&gt;</div></div><div class="bd"><span data-h="sau">Prezado cliente,</span><br><br>Detectamos uma atividade suspeita na sua conta. <span data-h="urg">Se você não verificar sua identidade em 24 horas, sua conta será bloqueada e seus pedidos cancelados.</span><br><span class="lk" data-h="link">Verificar minha conta</span><br><span style="color:#888;font-size:11px">Endereço real do botão: vendai-seguranca.top/verificar</span><br><br>Equipe de Segurança</div></div>`,
+   choices:[['Clicar em "Verificar minha conta"',1],['Apagar o e-mail e entrar na minha conta pelo app, sem usar o link',['good','Boa decisão','Se houver problema real, ele aparece no app ou no site digitado por você. Marque o e-mail como phishing para ajudar o filtro.']]]},
+  {screen:`<div class="web"><div class="u">Fechar<span data-h="link">vendai-seguranca.top/verificar</span></div><div class="p"><b style="font-size:17px;color:#0e7c66">Vendaí</b><br><b>Confirme seus dados</b><div data-h="dados"><input placeholder="E-mail" disabled><input placeholder="Senha" disabled><input placeholder="CPF" disabled><input placeholder="Número do cartão" disabled><input placeholder="Validade e CVV" disabled></div><div class="go">Confirmar</div></div></div>`,
+   choices:[['Preencher e confirmar',['bad','Caiu no golpe','Você entregou senha, CPF e cartão. Troque a senha do site verdadeiro (digitando o endereço), peça bloqueio do cartão ao banco e registre boletim de ocorrência.']],['Fechar a página',['good','Boa decisão','Nenhuma loja pede senha, CPF, cartão e CVV juntos para "verificar identidade". Ainda bem que você fechou.']]]}]},
+{id:'tel',tab:'Ligação',name:'Falsa central do banco (0800)',
+ intro:'<b>O que é:</b> SMS de "compra aprovada" de valor alto com um 0800 para ligar. Ao telefone, o golpista pede senha ou uma transferência para uma "conta segura". Os bancos não pedem senha, token nem Pix por telefone.<div class="src">Fontes: InfoMoney (golpe do 0800), Febraban.</div>',
+ signs:[['sms','Mensagem com compra de valor alto'],['n0800','0800 vindo na mensagem'],['dados','Pede CPF e dados primeiro'],['pix','Pede Pix para "conta segura"'],['seg','Pede segredo se o banco ligar']],
+ steps:[
+  {screen:`<div class="sms"><div class="hd"><b>Seu banco</b><small>Mensagem de texto</small></div><div class="b"><span data-h="sms">Compra aprovada R$ 4.890,00 em VITRINE MODA, cartão final 4821.</span> Não reconhece? Ligue <span data-h="n0800" style="color:#0b57d0;text-decoration:underline">0800 000 0000</span></div><div class="t">Hoje 16:31</div></div>`,
+   choices:[['Ligar para o 0800 da mensagem',1],['Ligar para o número que está no verso do cartão',['good','Boa decisão','É assim que a Febraban orienta: use o telefone do verso do cartão ou o app do banco, e não o número que veio na mensagem. Se possível, ligue de outro aparelho.']]]},
+  {screen:`<div class="call"><div class="who"><b>0800 000 0000</b><small>Central de Segurança</small></div><div class="l"><small>Atendente</small>Boa tarde, aqui é o Ricardo da central de segurança. Vou bloquear essa compra. <span data-h="dados">Preciso do seu nome completo, CPF e número da conta para localizar.</span></div><div class="l me"><small>Você</small>...</div></div>`,
+   choices:[['Informar os dados e continuar',2],['Desligar e ligar para o número do verso do cartão',['good','Boa decisão','Ninguém da central precisa que você diga CPF e conta primeiro: o banco já tem. Desligue e confirme pelo número oficial.']]]},
+  {screen:`<div class="call"><div class="who"><b>0800 000 0000</b><small>Central de Segurança</small></div><div class="l"><small>Atendente</small>Sua conta foi acessada por um funcionário fraudador. <span data-h="pix">Para proteger o dinheiro, faça agora um Pix para uma conta segura temporária.</span> <span data-h="seg">Se o banco ligar para confirmar, diga que é um investimento.</span></div></div>`,
+   choices:[['Fazer o Pix para a "conta segura"',['bad','Caiu no golpe','Banco nunca manda você transferir para "conta segura". Pedir para mentir ao banco é o sinal mais forte de golpe. Avise o banco imediatamente, peça a devolução do Pix e registre boletim de ocorrência.']],['Desligar e ligar para o banco pelo número do cartão',['good','Boa decisão','Você cortou o golpe no ponto certo. Banco não liga pedindo transferência, Pix, senha ou token.']]]}]}
+];
+const TIPS={
+ sms:{rem:['Número comum de celular','Cobrança oficial não chega de um número de celular qualquer. O remetente aparece como número pessoal.','Desconfie de mensagem de "empresa" vinda de número comum.'],
+  urg:['Prazo curto para pagar','"2 horas" e o relógio na página servem para você não pensar.','Golpe tem pressa; cobrança verdadeira dá prazo e tem canal de atendimento.'],
+  taxa:['Taxa pequena como isca','R$ 12,90 parece pouco, e por isso poucas pessoas desconfiam. É o desenho do golpe.','Qualquer cobrança chegando por link merece conferência no canal oficial.'],
+  link:['Endereço do link estranho','"entregaja-liberacao.top" não é o endereço da transportadora. Terminações como .top são comuns em páginas de golpe.','Não clique. Digite você mesmo o endereço oficial.'],
+  pes:['Pix para pessoa física','A taxa seria da transportadora, mas o dinheiro vai para o CPF de uma pessoa.','Empresa recebe em nome de CNPJ.']},
+ zap:{num:['Número desconhecido, sem histórico','Número novo, não está nos contatos e a conversa não tem histórico. A foto de perfil pode ter sido copiada da rede social.','Salve o contato só depois de confirmar por outro meio.'],
+  pix:['Pedido de Pix a um "conhecido"','O golpe é exatamente esse: fazer você pagar antes de checar.','Nunca faça Pix sem confirmar por ligação ou chamada de vídeo.'],
+  urg:['Urgência','"Vence hoje" e "te devolvo amanhã". A pressa é a arma do golpe.','Respire. Ligue primeiro.'],
+  ban:['Desculpa para não falar','"Chip novo", "app bloqueado", "não consigo ligar": todas impedem você de ouvir a voz da pessoa.','Peça uma ligação ou áudio. Golpista nunca fala.']},
+ mail:{rem:['Remetente com domínio estranho','O nome diz "Segurança Vendaí", mas o endereço é de outro domínio (.top). O nome de exibição não prova nada.','Olhe o endereço entre os sinais < >, não só o nome.'],
+  sau:['Saudação genérica','"Prezado cliente": quem tem seus dados chama você pelo nome.',''],
+  urg:['Ameaça e prazo de 24 horas','Medo e prazo curto empurram você a clicar sem pensar.','Aviso verdadeiro aparece também na sua conta.'],
+  link:['Botão leva a outro endereço','O texto do botão diz uma coisa, mas o endereço real é outro. Em um computador, passar o mouse por cima mostra o destino.','Passe o mouse sem clicar. Se o domínio não for o oficial, apague.'],
+  dados:['Pede dados demais','Senha, CPF, cartão e CVV na mesma página. Loja verdadeira não pede tudo isso para "verificar identidade". O Procon-MG alerta para dados excessivos.','Nunca digite senha em página aberta por link de e-mail.']},
+ tel:{sms:['Mensagem com compra de valor alto','Compra alta e desconhecida que você precisa "cancelar": o golpe começa criando susto.','Abra o app do banco e veja o extrato.'],
+  n0800:['0800 vindo na mensagem','Um 0800 passa confiança, mas o número veio na mensagem do golpista, e quem atende é ele.','Use o número do verso do cartão ou o app.'],
+  dados:['Pede dados primeiro','O banco já tem seus dados. Quem pergunta CPF e conta para "localizar" está colhendo informação.','Desligue.'],
+  pix:['Pix para "conta segura"','Não existe conta segura temporária. Banco não pede transferência para proteger dinheiro.','Febraban: banco nunca liga pedindo Pix.'],
+  seg:['Pede para mentir ao banco','Pedir para dizer que é investimento é para o banco não perceber a fraude. É o sinal mais claro.','Se alguém pede segredo, é golpe.']}
+};
+let cur=0,step=0;const found={};
+const tip=document.getElementById('tip');
+function emptyTip(){tip.className='card hide';tip.innerHTML=''}
+function render(){const s=SC[cur];found[cur]=found[cur]||new Set();
+ document.getElementById('tabs').innerHTML=SC.map((x,i)=>`<button class="${i===cur?'on':''}" onclick="pick(${i})"><b>${x.tab}</b>${x.name}</button>`).join('');
+ document.getElementById('intro').innerHTML=`<h3>${s.name}</h3><p>${s.intro}</p>`;
+ document.getElementById('screen').innerHTML=s.steps[step].screen;
+ document.getElementById('opts').innerHTML='<p>O que você faz?</p>'+s.steps[step].choices.map((c,i)=>`<button onclick="choose(${i})">${c[0]}</button>`).join('');
+ document.getElementById('result').innerHTML='';
+ document.querySelectorAll('#screen [data-h]').forEach(e=>{if(found[cur].has(e.dataset.h))e.classList.add('found')});upd()}
+function pick(i){cur=i;step=0;emptyTip();render()}
+function choose(i){const c=SC[cur].steps[step].choices[i];
+ if(typeof c[1]==='number'){step=c[1];emptyTip();render();return}
+ const r=c[1];document.getElementById('opts').innerHTML='';
+ document.getElementById('result').innerHTML=`<div class="res ${r[0]}"><h4>${r[1]}</h4><p>${r[2]}</p><button onclick="pick(${cur})">Tentar de novo</button> ${cur<SC.length-1?`<button onclick="pick(${cur+1})">Próximo golpe</button>`:''}</div>`;
+ SC[cur].signs.forEach(s=>found[cur].add(s[0]));document.querySelectorAll('#screen [data-h]').forEach(e=>e.classList.add('found'));upd()}
+function upd(){const s=SC[cur],f=found[cur];const n=s.signs.filter(x=>f.has(x[0])).length;
+ document.getElementById('n').textContent=n;document.getElementById('tot').textContent=s.signs.length;
+ document.getElementById('bar').style.width=(n/s.signs.length*100)+'%';
+ document.getElementById('list').innerHTML=s.signs.map(x=>`<li class="${f.has(x[0])?'done':''}">${x[1]}</li>`).join('')}
+document.addEventListener('click',e=>{const h=e.target.closest('#screen [data-h]');if(!h)return;const t=TIPS[SC[cur].id][h.dataset.h];if(!t)return;
+ found[cur].add(h.dataset.h);h.classList.add('found');
+ tip.className='card';tip.innerHTML=`<button class="x" onclick="emptyTip()" aria-label="Fechar">×</button><span class="tag">Sinal de golpe</span><h4>${t[0]}</h4><p>${t[1]}</p>${t[2]?`<div class="how"><b>O que fazer:</b> ${t[2]}</div>`:''}`;upd()});
+document.getElementById('bHint').onclick=function(){document.body.classList.toggle('hint');this.classList.toggle('on')};
+document.getElementById('bReset').onclick=()=>{for(const k in found)found[k]=new Set();cur=0;step=0;emptyTip();render()};
+render();
+</script>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Loja verdadeira x loja clonada</title>
+<style>
+:root{--ink:#14213d;--muted:#5a6477;--line:#d9dde4;--bg:#eceff3;--bad:#b3261e;--badbg:#fdecea;--ok:#1b6e3c;--okbg:#e6f4ea;--accent:#b5481b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Segoe UI",system-ui,Arial,sans-serif}
+.top{background:var(--ink);color:#fff;padding:14px 20px;display:flex;flex-wrap:wrap;gap:10px 24px;align-items:center;justify-content:space-between}
+.top h1{margin:0;font-size:18px;font-weight:600}
+.top p{margin:0;font-size:13px;opacity:.8}
+.ctrl{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.ctrl button{font:inherit;font-size:13px;border:1px solid rgba(255,255,255,.4);background:transparent;color:#fff;padding:6px 12px;border-radius:4px;cursor:pointer}
+.ctrl button:hover{background:rgba(255,255,255,.12)}
+.ctrl button.on{background:#fff;color:var(--ink)}
+.wrap{max-width:1320px;margin:0 auto;padding:16px}
+.frames{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:980px){.frames{grid-template-columns:1fr}}
+.lab{font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin:0 0 6px}
+.browser{background:#fff;border:1px solid #b9bfca;border-radius:8px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.chrome{background:#dfe3ea;padding:8px 10px;display:flex;gap:10px;align-items:center;border-bottom:1px solid #b9bfca}
+.dots{display:flex;gap:5px}.dots i{width:9px;height:9px;border-radius:50%;background:#b0b6c1;display:block}
+.url{flex:1;background:#fff;border-radius:14px;padding:4px 12px;font-size:12.5px;display:flex;gap:6px;align-items:center;overflow:hidden;white-space:nowrap}
+.url svg{flex:none}
+.url span{overflow:hidden;text-overflow:ellipsis}
+/* site */
+.site{font:12.5px/1.4 Arial,Helvetica,sans-serif;color:#222;background:#fff}
+.site .bar{background:#1f5f4a;color:#fff;text-align:center;padding:5px;font-size:11.5px}
+.site header{display:flex;gap:14px;align-items:center;padding:10px 14px;border-bottom:1px solid #e5e5e5}
+.logo{font-weight:800;font-size:19px;color:#1f5f4a;letter-spacing:-.02em;white-space:nowrap}
+.logo b{color:#d9822b}
+.search{flex:1;border:1px solid #ccc;border-radius:3px;padding:7px 10px;color:#888;min-width:80px}
+.site nav{display:flex;gap:16px;padding:7px 14px;background:#f5f5f5;font-size:12px;color:#444;border-bottom:1px solid #e5e5e5;overflow:hidden;white-space:nowrap}
+.crumb{padding:8px 14px 0;color:#777;font-size:11.5px}
+.prod{display:grid;grid-template-columns:150px 1fr;gap:16px;padding:12px 14px}
+.img{background:#f1efe9;border-radius:4px;display:flex;align-items:center;justify-content:center;aspect-ratio:1}
+.prod h2{font-size:16px;margin:0 0 4px;font-weight:600}
+.stars{color:#d9822b;font-size:12px}.stars small{color:#777}
+.old{color:#888;text-decoration:line-through;font-size:12px;margin-top:8px}
+.price{font-size:26px;font-weight:700;color:#111;line-height:1.1}
+.price small{font-size:12px;font-weight:400;color:#555}
+.inst{color:#1f5f4a;font-size:12px;margin-top:2px}
+.timer{display:inline-block;background:#d62d20;color:#fff;font-weight:700;padding:3px 8px;border-radius:3px;margin-top:8px;font-size:12px}
+.stock{color:#d62d20;font-size:12px;margin-top:4px}
+.buy{display:inline-block;margin-top:10px;background:#d9822b;color:#fff;font-weight:700;padding:10px 24px;border-radius:4px;font-size:13.5px}
+.pay{margin:10px 14px 0;padding:8px 10px;border:1px solid #e5e5e5;border-radius:4px;font-size:12px;color:#444}
+.pay b{color:#111}
+.rev{padding:8px 14px 0}.rev h3{font-size:13px;margin:6px 0 4px}
+.rev p{margin:0 0 5px;font-size:12px;color:#444}.rev p span{color:#d9822b}.rev p em{color:#999;font-style:normal;font-size:11px}
+footer{margin-top:12px;background:#2b2b2b;color:#bbb;font-size:11px;padding:10px 14px;line-height:1.5}
+footer .l{display:flex;gap:14px;flex-wrap:wrap;margin-bottom:4px;color:#ddd}
+/* hotspots */
+[data-h]{cursor:pointer;border-radius:3px;transition:outline-color .15s,background-color .15s}
+.hint [data-h]{outline:2px dashed rgba(181,72,27,.75);outline-offset:2px}
+[data-h]:hover{outline:2px solid #b5481b;outline-offset:2px}
+[data-h].found.bad{outline:2px solid var(--bad);outline-offset:2px}
+[data-h].found.ok{outline:2px solid var(--ok);outline-offset:2px}
+.lesson{display:grid;grid-template-columns:1.2fr 1fr;gap:16px;margin-top:16px}
+@media(max-width:980px){.lesson{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--line);border-radius:8px;padding:16px 18px}
+.card h3{margin:0 0 8px;font-size:15px}
+#tip{position:fixed;left:50%;transform:translateX(-50%);bottom:12px;width:min(860px,94vw);z-index:20;box-shadow:0 6px 24px rgba(20,33,61,.28);border-color:#9aa3b5;padding-right:44px}
+#tip.hide{display:none}
+#tip .x{position:absolute;right:10px;top:8px;border:0;background:none;font-size:22px;line-height:1;color:var(--muted);cursor:pointer}
+body{padding-bottom:230px}
+#tip .tag{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:2px 8px;border-radius:3px;margin-bottom:8px}
+#tip .tag.bad{background:var(--badbg);color:var(--bad)}
+#tip .tag.ok{background:var(--okbg);color:var(--ok)}
+#tip h4{margin:0 0 6px;font-size:17px}
+#tip p{margin:0 0 8px}
+#tip .how{background:#f4f6f9;border-left:3px solid var(--ink);padding:8px 10px;font-size:14px}
+#tip.empty{color:var(--muted);display:flex;align-items:center}
+.prog{height:8px;background:#e3e6ec;border-radius:4px;overflow:hidden;margin:6px 0 10px}
+.prog i{display:block;height:100%;width:0;background:var(--bad);transition:width .3s}
+ul.list{list-style:none;padding:0;margin:0;display:grid;gap:6px}
+ul.list li{display:flex;gap:8px;align-items:flex-start;font-size:14px;color:#8a92a3}
+ul.list li:before{content:"";flex:none;width:14px;height:14px;margin-top:3px;border:2px solid #c3c8d2;border-radius:3px}
+ul.list li.done{color:var(--ink)}
+ul.list li.done:before{background:var(--bad);border-color:var(--bad)}
+.check{margin-top:14px;font-size:14px}
+.check ol{margin:6px 0 0;padding-left:20px}
+.foot{font-size:12px;color:var(--muted);text-align:center;padding:14px}
+</style>
+</head>
+<body>
+<div class="top">
+  <div><h1>Loja verdadeira x loja clonada</h1><p>Os dois sites abaixo parecem iguais. Clique nas partes da página para descobrir o que entrega o golpe.</p></div>
+  <div class="ctrl">
+    <button id="bHint">Mostrar pistas</button>
+    <button id="bReveal">Revelar todos os sinais</button>
+    <button id="bReset">Recomeçar</button>
+  </div>
+</div>
+<div class="wrap">
+  <div class="frames">
+    <div><p class="lab">Site A</p><div class="browser" id="A"></div></div>
+    <div><p class="lab">Site B</p><div class="browser" id="B"></div></div>
+  </div>
+  <div class="lesson">
+    <div class="card" style="display:flex;align-items:center;color:#5a6477">Clique em qualquer parte dos dois sites: endereço, preço, relógio, rodapé, avaliações. A explicação aparece na parte de baixo da tela. Compare o que cada loja mostra.</div>
+    <div class="card">
+      <h3>Sinais de golpe encontrados: <span id="n">0</span> de <span id="tot">0</span></h3>
+      <div class="prog"><i id="bar"></i></div>
+      <ul class="list" id="list"></ul>
+      <div class="check"><b>Antes de pagar, confira:</b>
+        <ol>
+          <li>Digite o endereço você mesmo. Não entre por link de mensagem ou anúncio.</li>
+          <li>Procure o CNPJ do rodapé na consulta pública da Receita Federal.</li>
+          <li>Pesquise o nome da loja junto com "reclamação".</li>
+          <li>Veja se o Pix ou boleto sai no nome da empresa, e não de uma pessoa.</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+  <div id="tip" class="card hide"></div>
+  <p class="foot">Simulação educativa. Marca, CNPJ, endereços e telefones são fictícios; nenhum campo envia dados. Padrões baseados em alertas do Procon-MG e da imprensa (ver arquivo de fontes).</p>
+</div>
+<script>
+const lock='<svg width="12" height="12" viewBox="0 0 24 24" fill="#2e7d32"><path d="M12 1a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-9a2 2 0 0 0-2-2h-1V6a5 5 0 0 0-5-5zm-3 8V6a3 3 0 0 1 6 0v3z"/></svg>';
+const fryer='<svg viewBox="0 0 120 120" width="110" height="110"><rect x="18" y="26" width="84" height="70" rx="22" fill="#2b2f36"/><rect x="28" y="38" width="64" height="30" rx="10" fill="#3c424c"/><circle cx="88" cy="82" r="6" fill="#d9822b"/><rect x="26" y="96" width="14" height="8" rx="3" fill="#2b2f36"/><rect x="80" y="96" width="14" height="8" rx="3" fill="#2b2f36"/><rect x="42" y="16" width="36" height="12" rx="6" fill="#3c424c"/></svg>';
+const SITES={
+ A:{fake:false,url:'www.casaeconforto.com.br/fritadeira-eletrica-12l',
+  bar:'Frete grátis acima de R$ 299 · Troca em até 30 dias',
+  price:'<div class="old" data-h="preco">de R$ 799,90</div><div class="price" data-h="preco">R$ 649,90 <small>à vista</small></div><div class="inst" data-h="parcela">ou 10x de R$ 64,99 sem juros no cartão</div>',
+  extra:'<div class="stock">Em estoque · Entrega em 5 a 8 dias úteis</div>',
+  pay:'<b>Formas de pagamento:</b> cartão de crédito em até 10x, Pix e boleto bancário (emitido no nome da empresa).',
+  rev:[['★★★★★','Chegou no prazo e funciona bem.','há 3 meses'],['★★★★☆','Boa, mas o cesto é um pouco pequeno.','há 5 semanas'],['★★★☆☆','Demorou um dia a mais para chegar.','há 2 meses']],
+  foot:'<div class="l"><span data-h="trocas">Política de trocas e arrependimento (7 dias)</span><span>Privacidade</span><span>Como comprar</span></div><div data-h="rodape">Casa &amp; Conforto Comércio de Utilidades Ltda · CNPJ 00.000.000/0001-00<br>Av. Exemplo, 100, Centro, Aracaju/SE · SAC 0800 000 0000 · sac@casaeconforto.com.br</div>',
+  contato:''},
+ B:{fake:true,url:'casaconforto-outlet.shop-promo.top/fritadeira-12l',
+  bar:'MEGA QUEIMA DE ESTOQUE · Frete grátis para todo o Brasil',
+  price:'<div class="old" data-h="preco">de R$ 699,00</div><div class="price" data-h="preco">R$ 99,00 <small>só hoje</small></div><div class="inst" data-h="parcela" style="color:#555">Pix com 10% extra de desconto</div>',
+  extra:'<span class="timer" data-h="relogio">Oferta termina em <span id="cd">09:59</span></span><div class="stock" data-h="relogio">Restam apenas 3 unidades</div>',
+  pay:'<b data-h="pagamento">Pagamento: Pix ou boleto.</b> <span data-h="contato">Contato: só WhatsApp.</span>',
+  rev:[['★★★★★','Produto top, recomendo!!','ontem'],['★★★★★','Chegou rápido, amei','ontem'],['★★★★★','Melhor preço que já vi','ontem']],
+  foot:'<div class="l"><span>Sobre</span><span>Contato</span></div><div data-h="rodape">© Casa &amp; Conforto. Todos os direitos reservados.</div>'}
+};
+const TIPS={
+ url:{A:['ok','Endereço oficial','O domínio é o nome da loja, sem acréscimos, e sempre o mesmo.','Digite você o endereço no navegador e salve nos favoritos.'],
+      B:['bad','Endereço com nome parecido','A loja é a mesma na aparência, mas o endereço tem acréscimos como "outlet", "promo" e terminação .top. Golpistas registram endereços parecidos com o da loja verdadeira.','Compare letra por letra. Desconfie de terminações estranhas e de palavras como "oferta", "promo" e "outlet" no domínio. O cadeado ao lado do endereço não prova nada: site falso também pode ter.']},
+ preco:{A:['ok','Preço dentro do mercado','R$ 649,90 é próximo ao que outras lojas cobram por uma fritadeira 12 L.','Compare em 2 ou 3 lojas antes de comprar.'],
+        B:['bad','Preço muito abaixo do mercado','De R$ 699 por R$ 99: desconto de 85%. O Procon-MG aponta o preço baixo como "talvez, o maior chamariz para golpes virtuais".','Se a oferta parece boa demais, pesquise o mesmo produto em outras lojas. Desconto acima de 50% em produto procurado merece desconfiança.']},
+ parcela:{A:['ok','Parcelamento no cartão','Cartão em 10x sem juros dá proteção: dá para contestar a compra na operadora.','Prefira o cartão de crédito em compras online.'],
+          B:['bad','Só Pix com "desconto extra"','Empurra para o Pix, que é difícil de reverter. Cartão, que protege o consumidor, não é oferecido.','Desconfie de loja que só aceita Pix ou boleto.']},
+ relogio:{A:['ok','Sem pressão','Não há cronômetro nem contagem de estoque inventada.',''],
+          B:['bad','Pressa fabricada','O relógio de "oferta termina em..." e "restam 3 unidades" reiniciam sozinhos. A pressa serve para você não pesquisar.','Respire. Oferta real não some em 10 minutos. Se o relógio reinicia ao recarregar a página, é falso.']},
+ pagamento:{A:['ok','Meios de pagamento variados','Cartão, Pix e boleto, com boleto no nome da empresa.',''],
+            B:['bad','Pagamento sem proteção','Só Pix ou boleto. O Procon-MG alerta para sites que aceitam apenas depósito ou boleto fora do nome da loja.','Antes de confirmar, veja o nome do recebedor. Se for pessoa física, é golpe.']},
+ contato:{A:['ok','','',''],
+          B:['bad','Atendimento só por WhatsApp','Sem telefone fixo, e-mail ou endereço. O Procon-MG lista contato só por celular como sinal de alerta.','A loja séria informa CNPJ, endereço, telefone/SAC e e-mail. O Decreto nº 7.962/2013 exige essas informações em sites de venda.']},
+ rodape:{A:['ok','Loja identificada','O rodapé traz razão social, CNPJ, endereço e SAC, como exige o Decreto nº 7.962/2013, art. 2º.','Copie o CNPJ e consulte na Receita Federal: razão social, situação e endereço precisam bater com o site.'],
+         B:['bad','Rodapé vazio','Só "todos os direitos reservados". Sem CNPJ, sem endereço, sem SAC: não há como saber quem vende nem onde reclamar.','Sem CNPJ ou CPF no site, não compre. O Decreto nº 7.962/2013, art. 2º, I e II, exige a identificação do vendedor.']},
+ trocas:{A:['ok','Política de trocas à vista','A loja informa troca e arrependimento em 7 dias, conforme o CDC, art. 49.','Leia antes de comprar.'],B:['bad','','','']},
+ avaliacoes:{A:['ok','Avaliações variadas','Notas diferentes, datas espalhadas e comentários específicos: é como parece a vida real.','Desconfie de avaliações todas iguais e todas recentes.'],
+             B:['bad','Avaliações todas iguais','Três avaliações 5 estrelas, todas de "ontem", com textos genéricos. Em loja que acabou de abrir, são fabricadas.','Procure a loja em sites de reclamações e redes sociais, e não só nas avaliações do próprio site.']}
+};
+const SIGNS=[['url','Endereço parecido, mas diferente'],['preco','Preço muito abaixo do mercado'],['parcela','Só Pix, sem cartão'],['relogio','Relógio e estoque para apressar'],['contato','Atendimento só por WhatsApp'],['rodape','Sem CNPJ, endereço nem SAC'],['avaliacoes','Avaliações todas iguais e recentes']];
+function site(k){const s=SITES[k];
+ return `<div class="chrome"><div class="dots"><i></i><i></i><i></i></div><div class="url" data-h="url" data-s="${k}">${lock}<span>${s.url}</span></div></div>
+ <div class="site"><div class="bar">${s.bar}</div>
+ <header><div class="logo">Casa <b>&amp;</b> Conforto</div><div class="search">Buscar produtos</div><div>Entrar · Carrinho (0)</div></header>
+ <nav><span>Cozinha</span><span>Eletroportáteis</span><span>Cama e banho</span><span>Móveis</span><span>Ofertas</span></nav>
+ <div class="crumb">Início › Eletroportáteis › Fritadeiras</div>
+ <div class="prod"><div class="img">${fryer}</div><div><h2>Fritadeira elétrica 12 L, 1800 W</h2><div class="stars">★★★★☆ <small>(${s.fake?'3':'418'} avaliações)</small></div>${s.price}${s.extra}<span class="buy">Comprar</span></div></div>
+ <div class="pay">${s.pay}</div>
+ <div class="rev"><h3 data-h="avaliacoes">Avaliações de clientes</h3>${s.rev.map(r=>`<p data-h="avaliacoes"><span>${r[0]}</span> ${r[1]} <em>${r[2]}</em></p>`).join('')}</div>
+ <footer>${s.foot}</footer></div>`;}
+document.getElementById('A').innerHTML=site('A');document.getElementById('B').innerHTML=site('B');
+document.getElementById('B').querySelectorAll('[data-h]').forEach(e=>e.dataset.s='B');
+document.getElementById('A').querySelectorAll('[data-h]').forEach(e=>e.dataset.s='A');
+const found=new Set(),tip=document.getElementById('tip');
+function emptyTip(){tip.className='card hide';tip.innerHTML=''}
+function show(id,side){const t=TIPS[id]&&TIPS[id][side];if(!t||!t[1]){return}
+ tip.className='card';tip.innerHTML=`<button class="x" onclick="emptyTip()" aria-label="Fechar">×</button><span class="tag ${t[0]}">${t[0]==='bad'?'Sinal de golpe · Site '+side:'Confere · Site '+side}</span><h4>${t[1]}</h4><p>${t[2]}</p>${t[3]?`<div class="how"><b>Como confirmar:</b> ${t[3]}</div>`:''}`;
+ if(t[0]==='bad'){found.add(id)}
+ document.querySelectorAll(`[data-h="${id}"][data-s="${side}"]`).forEach(e=>e.classList.add('found',t[0]));
+ upd()}
+function upd(){document.getElementById('n').textContent=found.size;document.getElementById('bar').style.width=(found.size/SIGNS.length*100)+'%';
+ document.getElementById('list').innerHTML=SIGNS.map(s=>`<li class="${found.has(s[0])?'done':''}">${s[1]}</li>`).join('')}
+document.getElementById('tot').textContent=SIGNS.length;
+document.addEventListener('click',e=>{const h=e.target.closest('[data-h]');if(h){show(h.dataset.h,h.dataset.s)}});
+document.getElementById('bHint').onclick=function(){document.body.classList.toggle('hint');this.classList.toggle('on')};
+document.getElementById('bReveal').onclick=()=>{SIGNS.forEach(s=>show(s[0],'B'));document.querySelectorAll('[data-h][data-s="A"]').forEach(e=>{const t=TIPS[e.dataset.h]&&TIPS[e.dataset.h].A;if(t&&t[1])e.classList.add('found','ok')});show('url','B')};
+document.getElementById('bReset').onclick=()=>{found.clear();document.querySelectorAll('.found').forEach(e=>e.classList.remove('found','bad','ok'));emptyTip();upd()};
+// contagem regressiva que reinicia (como no site falso)
+let sec=599;setInterval(()=>{sec=sec<=0?599:sec-1;const c=document.getElementById('cd');if(c)c.textContent=String(Math.floor(sec/60)).padStart(2,'0')+':'+String(sec%60).padStart(2,'0')},1000);
+emptyTip();upd();
+</script>
+</body>
+</html>
